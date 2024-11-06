@@ -31,17 +31,23 @@ app.get('/',(req,res) =>{
     console.log("Connected on port = ",port);
 })
 
-app.post('/data',(req,res) => {
+app.post('/data', (req, res) => {
     const data = req.body;
 
     console.log(data);
 
-    client.publish(topic, data, { qos }, (error) => {
+    // Convert the JSON object to a string before sending
+    const payload = JSON.stringify(data);
+
+    client.publish(topic, payload, { qos }, (error) => {
         if (error) {
-        console.error(error)
+            console.error(error);
+            res.status(500).send("Error publishing message");
+        } else {
+            res.status(200).send("Message published successfully");
         }
-    })
-})
+    });
+});
 
 app.listen(port,()=>{
     console.log("Server running ");
