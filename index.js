@@ -23,7 +23,7 @@ const client = mqtt.connect('mqtt://broker.emqx.io:1883', {
 const topic = '/thermal_comfort'
 const qos = 0
 
-mqttClient.on('connect',()=>{
+client.on('connect',()=>{
     console.log('Connected to MQTT');
 });
 
