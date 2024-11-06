@@ -26,6 +26,7 @@ app.get('/',(req,res) =>{
     //         }
     //     }
     // }
+    console.log("Connected on port = ",port);
     res.send("hello");
 })
 
