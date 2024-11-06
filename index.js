@@ -10,42 +10,37 @@ app.use(cors());
 
 app.use(express.json());
 
-const mqttClient = mqtt.connect('mqtt://localhost:1883')
+const clientId = 'emqx_nodejs_' + Math.random().toString(16).substring(2, 8)
+const username = 'emqx_test'
+const password = 'emqx_test'
+
+const client = mqtt.connect('mqtt://broker.emqx.io:1883', {
+    clientId,
+    username,
+    password,
+})
+
+const topic = '/thermal_comfort'
+const qos = 0
 
 mqttClient.on('connect',()=>{
     console.log('Connected to MQTT');
 });
 
 app.get('/',(req,res) =>{
-    // const interfaces = os.networkInterfaces();
-
-    // for(const val in interfaces){
-    //     for(const iface of interfaces[val]){
-    //         if(iface.family == 'IPv4' && !iface.internal){
-    //             console.log(`Server IP: ${iface.address}`)
-    //         }
-    //     }
-    // }
     console.log("Connected on port = ",port);
-    res.send("hello");
 })
 
 app.post('/data',(req,res) => {
     const data = req.body;
 
-    // mqttClient.publish('user_data',JSON.stringify(data),(err)=>{
-    //     if(err){
-    //         console.error("Failed to publish to mqtt",err);
-    //         res.status(500).send("Failed to publish to mqtt");
-    //     }
+    console.log(data);
 
-    //     else{
-    //         console.log('DAta published ',data);
-    //         res.status(200).send("Done");
-    //     }
-    // })
-
-    res.send(data);
+    client.publish(topic, data, { qos }, (error) => {
+        if (error) {
+        console.error(error)
+        }
+    })
 })
 
 app.listen(port,()=>{
