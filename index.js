@@ -31,8 +31,11 @@ app.get('/',(req,res) =>{
     console.log("Connected on port = ",port);
 })
 
+
 app.post('/data', (req, res) => {
     const data = req.body;
+
+    data.timestamp = new Date().toISOString();
 
     console.log(data);
 
